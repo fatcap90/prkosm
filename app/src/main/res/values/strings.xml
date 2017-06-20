@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">prkosm</string>
+    <string name="bt_center_map_description">Center on my location</string>
+    <string name="bt_follow_me_description">Follow me</string>
 </resources>

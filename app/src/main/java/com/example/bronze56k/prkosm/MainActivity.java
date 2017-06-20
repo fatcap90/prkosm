@@ -1,5 +1,6 @@
 package com.example.bronze56k.prkosm;
 
+import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,7 +20,6 @@ import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.MinimapOverlay;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
@@ -32,8 +32,8 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 public class MainActivity extends AppCompatActivity
 {
     private MyLocationNewOverlay  myLocationoverlay;
-    private MapView  mMapView;
     private MapController mapController;
+    private Location currentLocation = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +45,19 @@ public class MainActivity extends AppCompatActivity
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setClickable(true);
         map.setMultiTouchControls(true);
-        //final float scale = getResources().getDisplayMetrics().density;
-       // final int newScale = (int) (256 * scale);
-        ///String[] OSMSource = new String[1];
-        //OSMSource[0] = "http://a.tile.openstreetmap.org/";
-       // XYTileSource MapSource = new XYTileSource("OSM", null, 1, 18, newScale, ".png", OSMSource);
-       // map.setTileSource(MapSource);
+
+        // Отображение с зеркала OSM
+        /*String[] urls = {"СЮДА ВСТАВИТЬ ССЫЛКУ"};
+        XYTileSource MapSource = new XYTileSource("OSM", 0, 1, 18, ".png", urls);
+        map.setTileSource(MapSource);*/
+
         mapController = (MapController) map.getController();
         mapController.setZoom(14);
-// My Location Overlay
+        // GeoPoint startPoint = new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());
+        GeoPoint startPoint = new GeoPoint(53.1970, 45.0194);
+        mapController.setCenter(startPoint);
+
+        // My Location Overlay
         myLocationoverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), map);
         myLocationoverlay.enableMyLocation();
         myLocationoverlay.setDrawAccuracyEnabled(true);
@@ -62,7 +66,7 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 mapController.animateTo(myLocationoverlay.getMyLocation());
            }
-      });
+        });
     }
 
     @Override
@@ -76,4 +80,6 @@ public class MainActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
     }
+
+
 }
